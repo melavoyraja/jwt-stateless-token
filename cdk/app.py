@@ -41,7 +41,7 @@ class MyCdkStack(cdk.Stack):
                     "command": [
                         "bash",
                         "-c",
-                        "pip install -r requirements.txt -t /asset-output && cp -r . /asset-output",  # noqa: E501
+                        "pip install -r requirements.txt -t /asset-output --platform manylinux2014_x86_64 --only-binary=:all: && cp -r . /asset-output",  # noqa: E501
                     ],
                 },
             ),
