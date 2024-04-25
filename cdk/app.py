@@ -3,6 +3,7 @@ from constructs import Construct
 
 import aws_cdk as cdk
 from aws_cdk import aws_kms as kms
+from aws_cdk import aws_lambda as lambda_
 
 
 class MyCdkStack(cdk.Stack):
@@ -25,6 +26,25 @@ class MyCdkStack(cdk.Stack):
             "JWTSigningKeyAlias",
             alias_name="alias/JWTSigningKey",  # Set your desired alias name
             target_key_id=kms_key.key_id,
+        )
+
+        # Define the Lambda function
+        lambda_.Function(
+            self,
+            "JWTSigningLambda",
+            runtime=lambda_.Runtime.PYTHON_3_9,
+            handler="main.handler",
+            code=lambda_.Code.from_asset(
+                "./application",
+                bundling={
+                    "image": cdk.DockerImage.from_registry("python:3.9"),
+                    "command": [
+                        "bash",
+                        "-c",
+                        "pip install -r requirements.txt -t /asset-output && cp -r . /asset-output",  # noqa: E501
+                    ],
+                },
+            ),
         )
 
 
