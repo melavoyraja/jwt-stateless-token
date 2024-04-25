@@ -29,7 +29,7 @@ class MyCdkStack(cdk.Stack):
         )
 
         # Define the Lambda function
-        lambda_.Function(
+        my_lambda = lambda_.Function(
             self,
             "JWTSigningLambda",
             runtime=lambda_.Runtime.PYTHON_3_9,
@@ -46,6 +46,9 @@ class MyCdkStack(cdk.Stack):
                 },
             ),
         )
+
+        # add function url
+        my_lambda.add_function_url(auth_type=lambda_.FunctionUrlAuthType.NONE)
 
 
 app = cdk.App()
