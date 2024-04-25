@@ -10,13 +10,21 @@ class MyCdkStack(cdk.Stack):
         super().__init__(scope, id, **kwargs)
 
         # Create a KMS key for signing operations (SIGN_VERIFY purpose)
-        kms.Key(
+        kms_key = kms.Key(
             self,
             "JWTSigningKey",
             enabled=True,
             removal_policy=cdk.RemovalPolicy.RETAIN,
             key_spec=kms.KeySpec.RSA_3072,
             key_usage=kms.KeyUsage.SIGN_VERIFY,
+        )
+
+        # Add an alias for the KMS key
+        kms.CfnAlias(
+            self,
+            "JWTSigningKeyAlias",
+            alias_name="alias/JWTSigningKey",  # Set your desired alias name
+            target_key_id=kms_key.key_id,
         )
 
 
